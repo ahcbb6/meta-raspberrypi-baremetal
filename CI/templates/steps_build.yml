@@ -1,0 +1,33 @@
+steps:
+- bash: |
+    echo "Building pico-examples for ${MACHINE}"
+    cd ~/poky
+    source oe-init-build-env
+    echo "BUILDCFG_VARS:append = \" TCLIBC\"" >> ./conf/local.conf
+    echo "MACHINE = \"${MACHINE}\"" >> ./conf/local.conf
+    echo "TCLIBC = \"newlib\"" >> ./conf/local.conf
+    echo "Building with the following configuration:"
+    tail -n 10 conf/local.conf
+    bitbake pico-examples
+  condition: succeededOrFailed()
+  displayName: 'Build baremetal images'
+
+- bash: |
+    source azp-scripts/azp-helpers.sh
+    echo "Moving artifacts to be deployed"
+    rm -rf ${DEPLOY_ARTIFACTS_DIR}/*
+
+    find /home/vsts/poky/build/tmp/deploy/images/${MACHINE}/ -name "*.uf2" -o -name "*.elf" | while read binfile ; do
+        mv ${binfile} ${DEPLOY_ARTIFACTS_DIR}
+    done
+
+  condition: succeededOrFailed()
+  displayName: 'Moving Artifacts'
+
+- publish: $(DEPLOY_ARTIFACTS_DIR)
+  artifact: $(MACHINE)
+  condition: succeededOrFailed()
+
+- publish: $(SSTATE_DIR)
+  artifact: 'SState-${{parameters.machine}}'
+  condition: succeededOrFailed()

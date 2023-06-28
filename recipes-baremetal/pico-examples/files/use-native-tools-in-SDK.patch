@@ -1,0 +1,22 @@
+Index: pico-sdk/tools/CMakeLists.txt
+===================================================================
+--- pico-sdk.orig/tools/CMakeLists.txt
++++ pico-sdk/tools/CMakeLists.txt
+@@ -40,7 +40,7 @@ function(pico_generate_pio_header TARGET
+ 
+     add_custom_command(OUTPUT ${HEADER}
+             DEPENDS ${PIO}
+-            COMMAND Pioasm -o ${OUTPUT_FORMAT} ${PIO} ${HEADER}
++            COMMAND ${Pioasm_EXECUTABLE} -o ${OUTPUT_FORMAT} ${PIO} ${HEADER}
+             VERBATIM)
+     add_dependencies(${TARGET} ${HEADER_GEN_TARGET})
+     get_target_property(target_type ${TARGET} TYPE)
+@@ -70,7 +70,7 @@ function(pico_add_uf2_output TARGET)
+     endif()
+     if (ELF2UF2_FOUND)
+         add_custom_command(TARGET ${TARGET} POST_BUILD
+-            COMMAND ELF2UF2 $<TARGET_FILE:${TARGET}> ${output_path}$<IF:$<BOOL:$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>>,$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>,$<TARGET_PROPERTY:${TARGET},NAME>>.uf2
++            COMMAND ${ELF2UF2_EXECUTABLE} $<TARGET_FILE:${TARGET}> ${output_path}$<IF:$<BOOL:$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>>,$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>,$<TARGET_PROPERTY:${TARGET},NAME>>.uf2
+             VERBATIM)
+     endif()
+ endfunction()
