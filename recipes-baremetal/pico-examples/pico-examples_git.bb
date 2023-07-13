@@ -20,7 +20,7 @@ SRC_URI:append = " file://use-native-tools-in-SDK.patch;patchdir=../pico-sdk"
 
 SRCREV_FORMAT ?= "examples_sdk"
 SRCREV_examples = "eca13acf57916a0bd5961028314006983894fc84"
-SRCREV_sdk = "6a7db34ff63345a7badec79ebea3aaef1712f374"
+SRCREV_sdk = "${PICO_SDK_SRCREV}"
 PV = "1.0+git${SRCPV}"
 
 
