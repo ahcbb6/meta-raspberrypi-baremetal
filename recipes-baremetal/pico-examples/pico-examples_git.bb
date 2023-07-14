@@ -17,9 +17,9 @@ SRC_URI:append = " git://github.com/raspberrypi/pico-sdk.git;protocol=https;bran
 SRC_URI:append = " file://use-poky-triplet-compiler-in-SDK.patch;patchdir=../pico-sdk"
 SRC_URI:append = " file://use-native-tools-in-SDK.patch;patchdir=../pico-sdk"
 
-
+PICO_EXAMPLES_SRCREV ?= "eca13acf57916a0bd5961028314006983894fc84"
 SRCREV_FORMAT ?= "examples_sdk"
-SRCREV_examples = "eca13acf57916a0bd5961028314006983894fc84"
+SRCREV_examples = "${PICO_EXAMPLES_SRCREV}"
 SRCREV_sdk = "${PICO_SDK_SRCREV}"
 PV = "1.0+git${SRCPV}"
 
