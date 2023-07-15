@@ -20,6 +20,7 @@ steps:
     echo "##vso[task.setvariable variable=buildbranch;]refs/heads/${{ parameters.build_branch }}"
 
     global_variables_pipeline
+    create_ssh_tunnel
     free_space_packages
     setup_yp_deps
     cleanup_leftover_deps
