@@ -104,3 +104,12 @@ FILES:${PN} += " \
 FILES:${PN}-dbg += " \
     ${base_libdir}/firmware/*.elf \
 "
+
+
+do_compile:prepend(){
+    echo "TEST1"
+    which pioasm
+    echo "TEST2"
+    find ${STAGING_BINDIR_NATIVE}
+    
+}
