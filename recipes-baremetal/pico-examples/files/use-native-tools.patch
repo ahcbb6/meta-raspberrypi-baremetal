@@ -1,0 +1,36 @@
+Index: git/pio/squarewave/CMakeLists.txt
+===================================================================
+--- git.orig/pio/squarewave/CMakeLists.txt
++++ git/pio/squarewave/CMakeLists.txt
+@@ -22,14 +22,14 @@ add_custom_target(pio_squarewave_datashe
+ 		)
+ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.hex
+         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio
+-        COMMAND Pioasm -o hex ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.hex
++        COMMAND ${Pioasm_EXECUTABLE} -o hex ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.hex
+         VERBATIM)
+ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.pio.h
+         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio
+-        COMMAND Pioasm ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.pio.h
++        COMMAND ${Pioasm_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/squarewave.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave.pio.h
+         VERBATIM)
+ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave_wrap.pio.h
+         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/squarewave_wrap.pio
+-        COMMAND Pioasm ${CMAKE_CURRENT_LIST_DIR}/squarewave_wrap.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave_wrap.pio.h
++        COMMAND ${Pioasm_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/squarewave_wrap.pio ${CMAKE_CURRENT_LIST_DIR}/generated/squarewave_wrap.pio.h
+         VERBATIM)
+ add_dependencies(pio_squarewave pio_squarewave_datasheet)
+Index: git/pio/ws2812/CMakeLists.txt
+===================================================================
+--- git.orig/pio/ws2812/CMakeLists.txt
++++ git/pio/ws2812/CMakeLists.txt
+@@ -32,6 +32,6 @@ example_auto_set_url(pio_ws2812_parallel
+ add_custom_target(pio_ws2812_datasheet DEPENDS ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py)
+ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py
+         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio
+-        COMMAND Pioasm -o python ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py
++        COMMAND ${Pioasm_EXECUTABLE} -o python ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio ${CMAKE_CURRENT_LIST_DIR}/generated/ws2812.py
+         VERBATIM)
+-add_dependencies(pio_ws2812 pio_ws2812_datasheet)
+\ No newline at end of file
++add_dependencies(pio_ws2812 pio_ws2812_datasheet)

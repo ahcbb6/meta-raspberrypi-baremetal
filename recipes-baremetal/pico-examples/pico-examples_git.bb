@@ -13,9 +13,10 @@ SRC_URI:append = " git://github.com/raspberrypi/pico-sdk.git;protocol=https;bran
 
 
 
-# Patches required for the SDK to allow us to use our own toolchain
+# Patches required to allow us to use our own toolchain
 SRC_URI:append = " file://use-poky-triplet-compiler-in-SDK.patch;patchdir=../pico-sdk"
 SRC_URI:append = " file://use-native-tools-in-SDK.patch;patchdir=../pico-sdk"
+SRC_URI:append = " file://use-native-tools.patch"
 
 PICO_EXAMPLES_SRCREV ?= "eca13acf57916a0bd5961028314006983894fc84"
 SRCREV_FORMAT ?= "examples_sdk"
