@@ -44,13 +44,13 @@ steps:
 - bash: |
     source azp-scripts/azp-helpers.sh
     # GITHUB=1 BRANCH=test-branch clone_layers poky
-    GITHUB=0 BRANCH=${{ parameters.build_branch }} clone_layers poky
+    SELF=$(Build.SourcesDirectory) GITHUB=0 BRANCH=${{ parameters.build_branch }} clone_layers poky
   continueOnError: false
   displayName: 'Clone Repositories'
 
 - bash: |
     source azp-scripts/azp-helpers.sh
     RMWORK="0" localconf
-    SELF="$(Build.SourcesDirectory)" add_layers
+    SELF="$(Build.SourcesDirectory)" add_layers freertos
   continueOnError: false
   displayName: 'Create bitbake configuration'

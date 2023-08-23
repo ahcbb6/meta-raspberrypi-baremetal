@@ -1,16 +1,40 @@
 steps:
 - bash: |
-    echo "Building pico-examples for ${MACHINE}"
+    source azp-scripts/azp-helpers.sh
+    print_section "Building pico-examples for ${MACHINE}"
     cd ~/poky
     source oe-init-build-env
+
     echo "BUILDCFG_VARS:append = \" TCLIBC\"" >> ./conf/local.conf
     echo "MACHINE = \"${MACHINE}\"" >> ./conf/local.conf
     echo "TCLIBC = \"newlib\"" >> ./conf/local.conf
-    echo "Building with the following configuration:"
+
+    print_section "Building with the following configuration:"
     tail -n 10 conf/local.conf
-    bitbake pico-examples
+    if [ -z "${BBTARGET}" ]; then
+        export BBTARGET="pico-examples"
+    fi
+    print_section "Running cmd: bitbake ${BBTARGET}"
+    bitbake ${BBTARGET}
+
   condition: succeededOrFailed()
   displayName: 'Build baremetal images'
+
+- bash: |
+    source azp-scripts/azp-helpers.sh
+    print_section "Building FreeRTOS-example for ${MACHINE}"
+    cd ~/poky
+    source oe-init-build-env
+    print_section "Building with the following configuration:"
+    tail -n 10 conf/local.conf
+    if [ -z "${BBTARGET}" ]; then
+        export BBTARGET="freertos-demo-pico"
+    fi
+    print_section "Running cmd: bitbake ${BBTARGET}"
+    bitbake ${BBTARGET}
+
+  condition: succeededOrFailed()
+  displayName: 'Build FreeRTOS image'
 
 - bash: |
     source azp-scripts/azp-helpers.sh

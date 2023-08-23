@@ -1,0 +1,3 @@
+[submodule "layers/meta-freertos"]
+	path = layers/meta-freertos
+	url = https://github.com/ahcbb6/meta-freertos.git
