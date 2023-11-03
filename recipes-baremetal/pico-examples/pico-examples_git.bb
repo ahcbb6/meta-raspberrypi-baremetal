@@ -4,16 +4,13 @@ HOMEPAGE = "https://github.com/raspberrypi/pico-examples"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=db74c933ca4b8bb864b9088bec194057"
 
-SRC_URI = "git://github.com/raspberrypi/pico-examples.git;protocol=https;branch=master;name=examples"
+SRC_URI = "git://github.com/raspberrypi/pico-examples.git;protocol=https;branch=master"
 
 SRC_URI:append = " file://use-native-tools.patch"
 
 PICO_EXAMPLES_SRCREV ?= "eca13acf57916a0bd5961028314006983894fc84"
-SRCREV_FORMAT ?= "examples_sdk"
-SRCREV_examples = "${PICO_EXAMPLES_SRCREV}"
+SRCREV = "${PICO_EXAMPLES_SRCREV}"
 PV = "1.0+git${SRCPV}"
-
-
 
 
 B = "${WORKDIR}/build"
