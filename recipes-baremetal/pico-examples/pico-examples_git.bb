@@ -20,6 +20,8 @@ B = "${WORKDIR}/build"
 S = "${WORKDIR}/git"
 
 
+
+
 # Override if we want to build only a subset of the samples
 RPI_PICO_SAMPLE ?= "all"
 OECMAKE_TARGET_COMPILE = " ${@bb.utils.contains('RPI_PICO_SAMPLE', 'all', 'all', ' ${RPI_PICO_SAMPLE}', d)}"

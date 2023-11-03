@@ -1,23 +1,7 @@
 
-# We need the pico SDK to build
-# TODO: use submodules fetcher for the SDK (it currently fails to recursively fetch submodules)
-SRC_URI:append = " git://github.com/raspberrypi/pico-sdk.git;protocol=https;branch=master;name=sdk;destsuffix=pico-sdk"
+PICO_SDK_PATH ?= "${STAGING_DIR_NATIVE}${localstatedir}/pico-sdk/"
 
-
-
-# Patches required to allow us to use our own toolchain
-SRC_URI:append = " file://use-poky-triplet-compiler-in-SDK.patch;patchdir=../pico-sdk"
-SRC_URI:append = " file://use-native-tools-in-SDK.patch;patchdir=../pico-sdk"
-
-
-SRCREV_FORMAT ?= "examples_sdk"
-SRCREV_sdk ?= "${PICO_SDK_SRCREV}"
-
-PICO_SDK_PATH ?= "${WORKDIR}/pico-sdk/"
-
-
-DEPENDS:append = " elf2uf2-native pioasm-native"
-
+DEPENDS:append = " pico-sdk-native elf2uf2-native pioasm-native"
 
 # Accommodate for the wiring in the Pico SDK
 EXTRA_OECMAKE:append = " \
