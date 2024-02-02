@@ -16,3 +16,9 @@ SRCREV_app = "9518ff491c62be40c03b0dc6f01863c58c320130"
 
 
 EXTRA_OECMAKE:append = " -DFREERTOS_KERNEL_SRC=${FREERTOS_KERNEL_SRC}"
+
+# Manually call cmake_do_compile since the do_compile() inside freertos-image
+# already takes priority over the call inside the cmake class
+do_compile() {
+    cmake_do_compile
+}
