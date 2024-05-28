@@ -16,15 +16,6 @@ steps:
             exit 1
             ;;
     esac
-
-    case ${{ parameters.build_branch }} in
-        master-next )
-            echo "##vso[task.setvariable variable=buildbranch;]refs/heads/master"
-            ;;
-        *)
-            echo "##vso[task.setvariable variable=buildbranch;]refs/heads/${{ parameters.build_branch }}"
-            ;;
-    esac
     
 
     global_variables_pipeline
@@ -46,8 +37,8 @@ steps:
     runBranch: $(BUILDBRANCH)
     artifact: 'SState-${{parameters.machine}}'
     targetPath: $(SSTATE_MIRRORS_DIR)
-    allowPartiallySucceededBuilds: true
-    allowFailedBuilds: true
+    allowPartiallySucceededBuilds: $(AZP_PARTIAL_BUILDS)
+    allowFailedBuilds: $(AZP_FAILED_BUILDS)
 
 - bash: |
     source azp-scripts/azp-helpers.sh
