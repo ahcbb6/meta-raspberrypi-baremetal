@@ -17,7 +17,15 @@ steps:
             ;;
     esac
 
-    echo "##vso[task.setvariable variable=buildbranch;]refs/heads/${{ parameters.build_branch }}"
+    case ${{ parameters.build_branch }} in
+        master-next )
+            echo "##vso[task.setvariable variable=buildbranch;]refs/heads/master"
+            ;;
+        *)
+            echo "##vso[task.setvariable variable=buildbranch;]refs/heads/${{ parameters.build_branch }}"
+            ;;
+    esac
+    
 
     global_variables_pipeline
     free_space_packages
