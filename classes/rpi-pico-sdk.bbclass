@@ -21,6 +21,6 @@ EXTRA_OECMAKE:append = " \
 # propagate --sysroot= and arch + nopie, the cmake wiring in the SDK
 # seems to like DEBUG_PREFIX_MAP and propagates it to all required variables
 # (unlike CFLAGS, CXXFLAGS, LDFLAGS, etc which cause problems one way or another).
-DEBUG_PREFIX_MAP:append = " ${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS}"
+DEBUG_PREFIX_MAP:append = "${TUNE_CCARGS}${GLIBC_64BIT_TIME_FLAGS} ${SECURITY_NOPIE_CFLAGS}  ${TOOLCHAIN_OPTIONS}"
 DEBUG_PREFIX_MAP:append = " --verbose -Wl,--verbose"
 
