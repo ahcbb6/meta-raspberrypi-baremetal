@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [OE Specific]
+
+Set the triple value to include poky vs the provided by the ARM Embedded Toolchain
+
 Index: pico-sdk/cmake/preload/toolchains/pico_arm_gcc.cmake
 ===================================================================
 --- pico-sdk.orig/cmake/preload/toolchains/pico_arm_gcc.cmake

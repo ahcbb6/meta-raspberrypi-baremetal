@@ -1,3 +1,7 @@
+Upstream-Status: Inappropriate [OE Specific]
+
+Use native tools built by bitbake vs the hardcoded versions expected by upstream
+
 Index: pico-sdk/tools/CMakeLists.txt
 ===================================================================
 --- pico-sdk.orig/tools/CMakeLists.txt
