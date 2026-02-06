@@ -12,10 +12,7 @@ PICO_EXAMPLES_SRCREV ?= "eca13acf57916a0bd5961028314006983894fc84"
 SRCREV = "${PICO_EXAMPLES_SRCREV}"
 PV = "1.0+git${SRCPV}"
 
-
-B = "${WORKDIR}/build"
-S = "${WORKDIR}/git"
-
+B = "${UNPACKDIR}/build"
 
 # Override if we want to build only a subset of the samples
 RPI_PICO_SAMPLE ?= "all"

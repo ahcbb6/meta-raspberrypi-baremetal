@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a670e5d5245e0ffae9782ea5e22af84e"
 
 inherit freertos-image cmake rpi-pico-image
 
-S="${WORKDIR}/app"
+S = "${UNPACKDIR}/app"
 
 
 SRC_URI += " \
