@@ -48,7 +48,8 @@ steps:
     if [ -z ${BRANCH} ]; then
         export BRANCH="${{ parameters.build_branch }}"
     fi
-    SELF=$(Build.SourcesDirectory) clone_layers poky
+    SELF=$(Build.SourcesDirectory) clone_layers oe-core
+
   continueOnError: false
   displayName: 'Clone Repositories'
 
