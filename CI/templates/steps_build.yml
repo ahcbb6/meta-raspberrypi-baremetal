@@ -2,8 +2,8 @@ steps:
 - bash: |
     source azp-scripts/azp-helpers.sh
     print_section "Building pico-examples for ${MACHINE}"
-    cd ~/poky
-    source oe-init-build-env
+    cd ~/
+    source openembedded-core/oe-init-build-env
 
     echo "BUILDCFG_VARS:append = \" TCLIBC\"" >> ./conf/local.conf
     echo "MACHINE = \"${MACHINE}\"" >> ./conf/local.conf
@@ -23,8 +23,8 @@ steps:
 - bash: |
     source azp-scripts/azp-helpers.sh
     print_section "Building FreeRTOS-example for ${MACHINE}"
-    cd ~/poky
-    source oe-init-build-env
+    cd ~/
+    source openembedded-core/oe-init-build-env
     print_section "Building with the following configuration:"
     tail -n 10 conf/local.conf
     if [ -z "${BBTARGET}" ]; then
@@ -41,7 +41,7 @@ steps:
     echo "Moving artifacts to be deployed"
     rm -rf ${DEPLOY_ARTIFACTS_DIR}/*
 
-    find /home/vsts/poky/build/tmp/deploy/images/${MACHINE}/ -name "*.uf2" -o -name "*.elf" | while read binfile ; do
+    find /home/vsts/build/tmp/deploy/images/${MACHINE}/ -name "*.uf2" -o -name "*.elf" | while read binfile ; do
         mv ${binfile} ${DEPLOY_ARTIFACTS_DIR}
     done
 
