@@ -41,9 +41,19 @@ steps:
     echo "Moving artifacts to be deployed"
     rm -rf ${DEPLOY_ARTIFACTS_DIR}/*
 
-    find /home/vsts/poky/build/tmp/deploy/images/${MACHINE}/ -name "*.uf2" -o -name "*.elf" | while read binfile ; do
-        mv ${binfile} ${DEPLOY_ARTIFACTS_DIR}
+    files=$(find "/home/vsts/build/tmp/deploy/images/${MACHINE}" \
+    \( -name "*.uf2" -o -name "*.elf" \) \
+    ! -type l)
+
+    [ -z "$files" ] && {
+      echo "ERROR: No artifacts found"
+      exit 1
+    }
+
+    for binfile in $files; do
+      mv "$binfile" "${DEPLOY_ARTIFACTS_DIR}/$(basename "$binfile")"
     done
+
 
   condition: succeededOrFailed()
   displayName: 'Moving Artifacts'
