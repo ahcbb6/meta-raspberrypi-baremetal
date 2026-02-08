@@ -18,7 +18,6 @@ the system will build all the examples, if desired, it may be set to the example
 
 | master  | [![Build Status][masterBadge]][masterPipeline]   |
 |:-------:|--------------------------------------------------|
-| mickledore | [![Build Status][mickledoreBadge]][mickledorePipeline] |
 
 
 [masterBadge]: https://dev.azure.com/ahcbb6/meta-raspberrypi-baremetal/_apis/build/status%2FRaspberry%20Pi%20Baremetal?branchName=master
@@ -31,10 +30,10 @@ the system will build all the examples, if desired, it may be set to the example
 
 This layer depends on:
 
-     URI: git://git.yoctoproject.org/poky
+     URI: https://git.openembedded.org/bitbake
      branch: master
 
-     URI: https://github.com/ahcbb6/meta-freertos.git
+     URI: https://git.openembedded.org/openembedded-core
      branch: master
 
 ## License
@@ -45,13 +44,13 @@ This layer has an MIT license (see LICENSE)
 
 1.- Clone the required repositories
 ```bash
-$ git clone https://git.yoctoproject.org/git/poky
-$ cd poky
+$ git clone https://git.openembedded.org/bitbake
+$ git clone https://git.openembedded.org/openembedded-core
 $ git clone --recurse-submodules https://github.com/ahcbb6/meta-raspberrypi-baremetal.git
 ```
 2.- Add meta-raspberrypi-baremetal and meta-freertos to your bblayers.conf
 ```bash
-$ source oe-init-build-env
+$ source openembedded-core/oe-init-build-env
 $ bitbake-layers add-layer ../meta-raspberrypi-baremetal
 $ bitbake-layers add-layer ../meta-raspberrypi-baremetal/layers/meta-freertos
 ```
