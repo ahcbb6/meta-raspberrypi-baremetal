@@ -1,5 +1,6 @@
-trigger: none
-
+trigger:
+- master
+- master-next
 
 schedules:
 - cron: "0 0 * * *"
