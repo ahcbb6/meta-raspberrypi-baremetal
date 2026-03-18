@@ -4,8 +4,12 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/../../LICENSE.TXT;md5=db74c933ca4b8bb864b9088bec194057"
 
 SRC_URI = "git://github.com/raspberrypi/pico-sdk.git;protocol=https;branch=master"
+
+require pico-sdk-version.inc
+
+# Move these two to an inc file, get it off the layer.conf
 SRCREV = "${PICO_SDK_SRCREV}"
-PV = "1.0+git${SRCPV}"
+PV = "${PICO_SDK_VERSION}+git${SRCPV}"
 
 B = "${WORKDIR}/build"
 S = "${UNPACKDIR}/${BP}/tools/${BPN}"
@@ -18,4 +22,3 @@ do_install(){
 }
 
 OECMAKE_GENERATOR = "Unix Makefiles"
-EXTRA_OECMAKE:append = " -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
