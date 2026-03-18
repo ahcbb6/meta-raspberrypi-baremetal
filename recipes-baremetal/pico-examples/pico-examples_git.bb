@@ -5,14 +5,14 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=db74c933ca4b8bb864b9088bec194057"
 
 SRC_URI = "git://github.com/raspberrypi/pico-examples.git;protocol=https;branch=master"
-
 SRC_URI:append = " file://use-native-tools.patch"
 
-PICO_EXAMPLES_SRCREV ?= "eca13acf57916a0bd5961028314006983894fc84"
-SRCREV = "${PICO_EXAMPLES_SRCREV}"
-PV = "1.0+git${SRCPV}"
 
-B = "${UNPACKDIR}/build"
+require pico-sdk-version.inc
+
+SRCREV = "${PICO_EXAMPLES_SRCREV}"
+PV = "${PICO_SDK_VERSION}+git${SRCPV}"
+
 
 # Override if we want to build only a subset of the samples
 RPI_PICO_SAMPLE ?= "all"
@@ -26,7 +26,6 @@ BAREMETAL_BINNAME ?= "${@bb.utils.contains('RPI_PICO_SAMPLE', 'all', 'blink-${MA
 IMAGE_LINK_NAME ?= "${@bb.utils.contains('RPI_PICO_SAMPLE', 'all', 'blink-image-${MACHINE}', ' ${RPI_PICO_SAMPLE}-image-${MACHINE}', d)}"
 
 # rpi-pico-image makes the pico-sdk available in PICO_SDK_PATH and installs/deploys .elf and .uf2 binaries automatically
-
 inherit cmake python3native rpi-pico-image
 
 # This should only build with newlib, not even tclibc-baremetal

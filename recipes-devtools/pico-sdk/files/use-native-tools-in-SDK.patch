@@ -2,25 +2,104 @@ Upstream-Status: Inappropriate [OE Specific]
 
 Use native tools built by bitbake vs the hardcoded versions expected by upstream
 
-Index: pico-sdk/tools/CMakeLists.txt
+Index: pico-sdk-2.2.0+git/tools/CMakeLists.txt
 ===================================================================
---- pico-sdk.orig/tools/CMakeLists.txt
-+++ pico-sdk/tools/CMakeLists.txt
-@@ -40,7 +40,7 @@ function(pico_generate_pio_header TARGET
+--- pico-sdk-2.2.0+git.orig/tools/CMakeLists.txt
++++ pico-sdk-2.2.0+git/tools/CMakeLists.txt
+@@ -259,7 +259,7 @@ function(pico_generate_pio_header TARGET
  
-     add_custom_command(OUTPUT ${HEADER}
-             DEPENDS ${PIO}
--            COMMAND Pioasm -o ${OUTPUT_FORMAT} ${PIO} ${HEADER}
-+            COMMAND ${Pioasm_EXECUTABLE} -o ${OUTPUT_FORMAT} ${PIO} ${HEADER}
-             VERBATIM)
-     add_dependencies(${TARGET} ${HEADER_GEN_TARGET})
-     get_target_property(target_type ${TARGET} TYPE)
-@@ -70,7 +70,7 @@ function(pico_add_uf2_output TARGET)
-     endif()
-     if (ELF2UF2_FOUND)
+         add_custom_command(OUTPUT ${HEADER}
+                 DEPENDS ${PIO}
+-                COMMAND pioasm -o ${OUTPUT_FORMAT} -v ${VERSION_STRING} ${PIO} ${HEADER}
++		COMMAND ${pioasm_EXECUTABLE} -o ${OUTPUT_FORMAT} -v ${VERSION_STRING} ${PIO} ${HEADER}
+                 VERBATIM)
+ 
+         add_dependencies(${TARGET} ${HEADER_GEN_TARGET})
+@@ -614,7 +614,7 @@ function(pico_add_uf2_output TARGET)
+             endif()
+         endif()
          add_custom_command(TARGET ${TARGET} POST_BUILD
--            COMMAND ELF2UF2 $<TARGET_FILE:${TARGET}> ${output_path}$<IF:$<BOOL:$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>>,$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>,$<TARGET_PROPERTY:${TARGET},NAME>>.uf2
-+            COMMAND ${ELF2UF2_EXECUTABLE} $<TARGET_FILE:${TARGET}> ${output_path}$<IF:$<BOOL:$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>>,$<TARGET_PROPERTY:${TARGET},OUTPUT_NAME>,$<TARGET_PROPERTY:${TARGET},NAME>>.uf2
-             VERBATIM)
+-            COMMAND picotool
++            COMMAND ${PICOTOOL_EXECUTABLE}
+             ARGS uf2 convert
+                 --quiet
+                 ${uf2_package_args}
+@@ -690,7 +690,7 @@ function(picotool_postprocess_binary TAR
+         # Embed PT
+         if (picotool_embed_pt)
+             add_custom_command(TARGET ${TARGET} POST_BUILD
+-                COMMAND picotool partition create --quiet ${picotool_embed_pt} $<TARGET_FILE:${TARGET}> $<TARGET_FILE:${TARGET}>
++                COMMAND ${PICOTOOL_EXECUTABLE} partition create --quiet ${picotool_embed_pt} $<TARGET_FILE:${TARGET}> $<TARGET_FILE:${TARGET}>
+                 VERBATIM)
+         endif()
+         # Signing/hashing/load maps for packaging
+@@ -701,7 +701,7 @@ function(picotool_postprocess_binary TAR
+             # We don't need the extra end block, as picotool seal will add one
+             target_compile_definitions(${TARGET} PRIVATE PICO_CRT0_INCLUDE_PICOBIN_END_BLOCK=0)
+             add_custom_command(TARGET ${TARGET} POST_BUILD
+-                COMMAND picotool
++                COMMAND ${PICOTOOL_EXECUTABLE}
+                 ARGS seal
+                     --quiet
+                     $<TARGET_FILE:${TARGET}> $<TARGET_FILE:${TARGET}>
+@@ -728,7 +728,7 @@ function(picotool_postprocess_binary TAR
+             endif()
+ 
+             add_custom_command(TARGET ${TARGET} POST_BUILD
+-                COMMAND picotool
++                COMMAND ${PICOTOOL_EXECUTABLE}
+                 ARGS encrypt
+                     --quiet --hash --sign
+                     ${picotool_encrypt_args}
+Index: pico-sdk-2.2.0+git/cmake/preload/toolchains/util/pico_arm_clang_common.cmake
+===================================================================
+--- pico-sdk-2.2.0+git.orig/cmake/preload/toolchains/util/pico_arm_clang_common.cmake
++++ pico-sdk-2.2.0+git/cmake/preload/toolchains/util/pico_arm_clang_common.cmake
+@@ -28,7 +28,7 @@ endforeach()
+ 
+ # Add target system root to cmake find path.
+ get_filename_component(PICO_COMPILER_DIR "${PICO_COMPILER_CC}" DIRECTORY)
+-get_filename_component(CMAKE_FIND_ROOT_PATH "${PICO_COMPILER_DIR}" DIRECTORY)
++set_filename_component(CMAKE_FIND_ROOT_PATH "${PICO_COMPILER_DIR}" DIRECTORY)
+ 
+ # Look for includes and libraries only in the target system prefix.
+ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+Index: pico-sdk-2.2.0+git/cmake/preload/toolchains/util/set_flags.cmake
+===================================================================
+--- pico-sdk-2.2.0+git.orig/cmake/preload/toolchains/util/set_flags.cmake
++++ pico-sdk-2.2.0+git/cmake/preload/toolchains/util/set_flags.cmake
+@@ -4,8 +4,14 @@ option(PICO_DEOPTIMIZED_DEBUG "Build deb
+ option(PICO_DEBUG_INFO_IN_RELEASE "Include debug info in release builds" 1)
+ 
+ get_property(IS_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
++list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
++	CMAKE_COMMON_FLAGS_APPEND
++	CMAKE_LDFLAGS_APPEND
++)
++
+ foreach(LANG IN ITEMS C CXX ASM)
+-    set(CMAKE_${LANG}_FLAGS_INIT "${PICO_COMMON_LANG_FLAGS}")
++    # set(CMAKE_${LANG}_FLAGS_INIT "${PICO_COMMON_LANG_FLAGS}")
++    string(STRIP "${CMAKE_${LANG}_FLAGS_INIT} ${PICO_COMMON_LANG_FLAGS} ${CMAKE_COMMON_FLAGS_APPEND}" CMAKE_${LANG}_FLAGS_INIT)
+     unset(CMAKE_${LANG}_FLAGS_DEBUG CACHE)
+     if (PICO_DEOPTIMIZED_DEBUG)
+         set(CMAKE_${LANG}_FLAGS_DEBUG_INIT "-O0")
+@@ -16,13 +22,16 @@ foreach(LANG IN ITEMS C CXX ASM)
+         set(CMAKE_${LANG}_FLAGS_RELEASE_INIT "-g")
+         set(CMAKE_${LANG}_FLAGS_MINSIZEREL_INIT "-g")
      endif()
- endfunction()
+-    set(CMAKE_${LANG}_LINK_FLAGS "-Wl,--build-id=none")
++    # set(CMAKE_${LANG}_LINK_FLAGS "-Wl,--build-id=none")
++    string(STRIP "${CMAKE_${LANG}_LINK_FLAGS} -Wl,--build-id=none ${CMAKE_LDFLAGS_APPEND}" CMAKE_${LANG}_LINK_FLAGS)
+ 
+     # try_compile is where the feature testing is done, and at that point,
+     # pico_standard_link is not ready to be linked in to provide essential
+     # functions like _exit. So pass -nostdlib so it doesn't link in an exit()
+     # function at all.
+     if(IS_IN_TRY_COMPILE)
+-        set(CMAKE_${LANG}_LINK_FLAGS "${CMAKE_${LANG}_LINK_FLAGS} -nostdlib")
++        # set(CMAKE_${LANG}_LINK_FLAGS "${CMAKE_${LANG}_LINK_FLAGS} -nostdlib")
++        string(STRIP "${CMAKE_${LANG}_LINK_FLAGS} -nostdlib" CMAKE_${LANG}_LINK_FLAGS)
+     endif()
+ endforeach()
++unset (IS_TRY_TO_COMPILE)
